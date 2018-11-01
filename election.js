@@ -59,7 +59,29 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
+    var refresh_button = document.querySelector('#refresh-button');
+    refresh_button.addEventListener('click', function(e){
 
+      var elements = document.querySelectorAll('li');
+      var update_response = axios({
+                            url: 'https://bb-election-api.herokuapp.com/',
+                            method: 'get',
+                            dataType: 'JSON'
+                          });
+
+      update_response.then(function(response){
+        var index = 0;
+        response.data.candidates.forEach(function(candidate){
+          console.log("Name: " + candidate.name + " Votes: " + candidate.votes);
+          elements[index].innerText = "Name: " + candidate.name + " Votes: " + candidate.votes;
+          index++;
+        });
+      });
+
+
+      // console.log(elements);
+
+    })
 
 
 
