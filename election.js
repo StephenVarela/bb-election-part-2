@@ -21,12 +21,43 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log('Response is back!')
       resp.data.candidates.forEach(function(candidate){
         console.log(candidate.name);
-        let listElement = document.createElement('li')
+        let listElement = document.createElement('li');
+        let formElement = document.createElement('form');
+        formElement.method = "POST";
+        formElement.action = "https://bb-election-api.herokuapp.com/vote";
+
+        let submitButton = document.createElement('button');
+        submitButton.innerText = 'Vote'
+        submitButton.type = "hidden";
+        submitButton.name = 'id';
+        submitButton.value = candidate.id;
+
+        formElement.append(submitButton);
+
+
         listElement.innerText = "Name: " + candidate.name + " Votes: " + candidate.votes;
         candidateList.append(listElement);
+        candidateList.append(formElement);
+
       });
       console.log(candidateList);
+    }).then(function(ob){
+        var list_listener = document.querySelector('#Candidate-List');
+        list_listener.addEventListener('submit', function(e){
+          e.preventDefault();
+          console.log('Before AXIOS');
+          axios({
+            url: 'https://bb-election-api.herokuapp.com/vote',
+            method: 'post',
+            data: {"id": e.target.querySelector('button').value}
+
+          }).then(function(){
+              console.log('Voted Bro');
+          });
+
+        })
     });
+
 
 
 
